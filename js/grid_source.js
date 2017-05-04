@@ -189,14 +189,6 @@ function MasterHex(sg, id, x_pos, y_pos, radius, type) {
         index = id;
     this.tp = type;
     this.grid_index = new Hex(id);
-    this.txt = canvas.display.text({
-        x: x_pos,
-        y: y_pos,
-        origin: { x: "center", y: "center" },
-        font: "bold" + (0.75 * radius).toString() + "px sans-serif",
-        text: index,
-        fill: "#FFFFFF"
-    });
     this.hexagon = canvas.display.polygon({
         x: x_pos,
         y: y_pos,
@@ -247,7 +239,6 @@ function MasterHex(sg, id, x_pos, y_pos, radius, type) {
         }
     });
     canvas.addChild(this.hexagon);
-    canvas.addChild(this.txt);
 }
 
 SimpleGrid.prototype.changeType = function (arr, type) {
@@ -663,69 +654,4 @@ SimpleGrid.prototype.aStar = function (start, goal) {
         iterator += 1;
     }
     return ans;
-};
-
-SimpleGrid.prototype.aStar_deprec = function (a, b) {
-    /*Returns the path between a and b using A*
-    * Requires external sorted-arrays.js
-    * a and b are indexes
-    */
-    "use strict";
-    var c,
-        hex_op = new Hex(1),
-        dist_s = [], //came from
-        dist = [],   //cost so far
-        s = [],
-        v = new SortedArray([]),
-        vms = new SortedArray([]), //aux (v - s)
-        aux_sd = Infinity,
-        aux_neighbors,
-        aux_break = true,
-        iterator,
-        jterator,
-        debug = 0;
-    for (iterator = 0; iterator < this.grid.length; iterator += 1) {
-        v.array.push(iterator);
-    }
-    for (iterator = 0; iterator < v.array.length; iterator += 1) {
-        dist[iterator] = dist_s[iterator] = Infinity;
-    }
-    dist_s[a] = 0;
-    dist[a] = this.distanceEstimation(a, b);
-    while (!this.compareArrays(v, s) && aux_break) {
-        if (debug === 20) {
-            break;
-        }
-        debug += 1;
-        aux_sd = Infinity;
-        vms = this.subtractArrays(vms, v, s);
-        //console.log(s);
-        //console.log(vms.array);
-        for (iterator = 0; iterator < vms.array.length; iterator += 1) {
-            /*tries to find the element c from vms that has the minimum value in the 'dist' vector
-            * it also only accpets elements that are traversable.
-            * Below (after &&): get's the MasterHex's type with index 'vms.array[iterator]' from SimpleGrid hex_type based on
-            * it's assigned type 'td' in order to find if it is traversable. We can only create paths on traversable nodes. */
-            if ((dist[vms.array[iterator]] < aux_sd) && (this.hex_type[this.grid[vms.array[iterator]].tp]["traversability"])) {
-                aux_sd = dist[vms.array[iterator]];
-                c = vms.array[iterator];
-            }
-        }
-        if (c === b) {
-            aux_break = false;
-            break;
-        }
-        s.push(c);
-        aux_neighbors = hex_op.getNeighbors(c);
-        for (jterator = 0; jterator < 6; jterator += 1) {
-            try {
-                if (dist_s[aux_neighbors[jterator]] > (dist_s[c] + this.hex_type[this.grid[aux_neighbors[jterator]].tp]["weight"] - 1)) {
-                    dist_s[aux_neighbors[jterator]] = dist_s[c] + this.hex_type[this.grid[aux_neighbors[jterator]].tp]["weight"] - 1;
-                    dist[aux_neighbors[jterator]] = dist_s[aux_neighbors[jterator]] + this.distanceEstimation(aux_neighbors[jterator], b);
-                }
-            } catch (ignore) {
-            }
-        }
-    }
-    return s;
 };
