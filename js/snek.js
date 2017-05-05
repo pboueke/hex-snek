@@ -1,14 +1,14 @@
 function Snek() {
-  "use strict"
+  "use strict";
   this.body = [];
   this.direction = 1;
   this.eyes;
 }
 
 Snek.prototype.createEyes = function(g) {
-  "use strict"
+  "use strict";
   if (this.body.length < 1) {
-    throw "Sssnek must have size to have eyesss!"
+    throw "Sssnek must have size to have eyesss!";
   }
   var head = g.grid[this.body[0]];
   this.eyes = canvas.display.image({
@@ -18,26 +18,26 @@ Snek.prototype.createEyes = function(g) {
       width: head.hexagon.radius * global.snek_eyes_size_multiplier,
       height: head.hexagon.radius * global.snek_eyes_size_multiplier,
       origin: { x: "center", y: "center" },
-  })
+  });
   canvas.addChild(this.eyes);
-}
+};
 
 Snek.prototype.rotateEyes = function (direction) {
-  "use strict"
+  "use strict";
   var dir = (direction || direction === 0) ? direction : this.direction;
   this.eyes.rotation = 30 + dir * 60;
   canvas.redraw();
-}
+};
 
 Snek.prototype.addToBody = function (g, id, ignore_restrictions) {
   /* Adds a tile to the snake body if possible.
     If ignore_restrictions is true, it will always add ignoring any restrictions.
    */
-  "use strict"
+  "use strict";
   var wont_ignore_restrictions = (ignore_restrictions) ? false : true;
   if (wont_ignore_restrictions) {
     // returns false if the id is greater tha the grid size
-    if (id > g.grid.length) {
+    if (id > g.grid.length - 1) {
       return false;
     }
     // returns false if id is not "traversable"
@@ -61,19 +61,20 @@ Snek.prototype.addToBody = function (g, id, ignore_restrictions) {
   this.body.unshift(id);
   changeHexType(g, this.body[0], "snek_head");
   return true;
-}
+};
 
 Snek.prototype.move = function(g) {
   // moves the entire snek 1 tile in the this.direction
-  "use strict"
+  "use strict";
   var next_hex_id,
       iterator,
       aux_int;
   // get the hex for the next clock cycle
   next_hex_id = g.grid[this.body[0]].grid_index.getOrderedNeighbors(this.body[0])[this.direction];
+  console.log(next_hex_id)
   // you die! (not a traversable tile)
-  if (next_hex_id > g.grid.length || !global.hex_types[g.grid[next_hex_id].tp]["traversable"]) {
-    console.log("snek dead")
+  if (next_hex_id > g.grid.length - 1 || !global.hex_types[g.grid[next_hex_id].tp]["traversable"]) {
+    console.log("snek dead");
     // TODO: death
   } // you eat! (increase snek size or add points)
   else if (global.hex_types[g.grid[next_hex_id].tp]["food_weight"] > 0) {
@@ -93,11 +94,11 @@ Snek.prototype.move = function(g) {
     this.eyes.x = g.grid[this.body[0]].hexagon.x;
     this.eyes.y = g.grid[this.body[0]].hexagon.y;
   }
-}
+};
 
 Snek.prototype.setDirection = function (new_direction) {
   /* Sets the new direction to the class and moves the snek`s eyes */
-  "use strict"
-  this.direction = new_direction
+  "use strict";
+  this.direction = new_direction;
   this.rotateEyes();
-}
+};

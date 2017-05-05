@@ -39,5 +39,5 @@ var global = {
 }
 
 var state = {
-  stop: true,
+  stop: false,
 }

@@ -158,7 +158,7 @@ Hex.prototype.getOrderedNeighbors = function (id) {
       case 4:
         return [n[2],n[0],n[1],n[3],n[4],n[5]]
       case 5:
-        return [n[5],n[1],n[0],n[4],n[3],n[2]]
+        return [n[5],n[2],n[0],n[1],n[3],n[4]]
     }
   } else {
       switch (position) {
