@@ -9,7 +9,7 @@ var config = {
   grid_size: 271,
   starting_snek_size: 5,
   starting_snek_head: 0,
-  clock: 1,
+  clock: 1000,
 }
 
 var global = {

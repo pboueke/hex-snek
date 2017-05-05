@@ -45,7 +45,8 @@ Snek.prototype.move = function(g) {
   // get the hex for the next clock cycle
   next_hex_id = g.grid[this.body[0]].grid_index.getOrderedNeighbors(this.body[0])[this.direction];
   // you die! (not a traversable tile)
-  if (!global.hex_types[g.grid[next_hex_id].tp]["traversable"]) {
+  if (next_hex_id > g.grid.length || !global.hex_types[g.grid[next_hex_id].tp]["traversable"]) {
+    console.log("snek dead")
     // TODO: death
   } // you eat! (increase snek size or add points)
   else if (global.hex_types[g.grid[next_hex_id].tp]["food_weight"] > 0) {
