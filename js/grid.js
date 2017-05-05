@@ -254,14 +254,14 @@ function MasterHex(sg, id, x_pos, y_pos, radius, type) {
         radius: radius,
         fill: global.hex_types[type]["main_color"], //standard_color
         rotation: 90
-    }).bind("mouseenter touchenter", function () {
+    })/*.bind("mouseenter touchenter", function () {
         var txt = "Entered: "+index
         var aux_arr = sg.grid[index].grid_index.getPositionAndDiagonal(index);
         txt += " | P: " + aux_arr[0];
         if (aux_arr[1]) { txt += "*";}
         txt += " | neighbor of  " + sg.grid[index].grid_index.getOrderedNeighbors(index)
         console.log(txt);
-    });
+    });*/
     canvas.addChild(this.hexagon);
     if (config.show_numbers) {
       canvas.addChild(this.txt);
@@ -681,3 +681,9 @@ SimpleGrid.prototype.aStar = function (start, goal) {
     }
     return ans;
 };
+
+function changeHexType(g, id, new_type) {
+  "use strict"
+  g.grid[id].tp = new_type;
+  g.grid[id].hexagon.fill = global.hex_types[new_type]["main_color"]
+}

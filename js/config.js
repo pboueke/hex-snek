@@ -9,7 +9,7 @@ var config = {
   grid_size: 271,
   starting_snek_size: 5,
   starting_snek_head: 0,
-  clock: 1000,
+  clock: 100,
 }
 
 var global = {
@@ -35,6 +35,7 @@ var global = {
       "food_weight": 1,
     },
   },
+  snek_eyes_size_multiplier: 2,
 }
 
 var state = {

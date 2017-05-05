@@ -1,12 +1,38 @@
 function Snek() {
   "use strict"
   this.body = [];
-  this.wait = false;
   this.direction = 1;
+  this.eyes;
+}
+
+Snek.prototype.createEyes = function(g) {
+  "use strict"
+  if (this.body.length < 1) {
+    throw "Sssnek must have size to have eyesss!"
+  }
+  var head = g.grid[this.body[0]];
+  this.eyes = canvas.display.image({
+      x: head.hexagon.x + global.snek_eyes_x_pos_diff,
+      y: head.hexagon.y + global.snek_eyes_y_pos_diff,
+      image: "img/snek_eyes.png",
+      width: head.hexagon.radius * global.snek_eyes_size_multiplier,
+      height: head.hexagon.radius * global.snek_eyes_size_multiplier,
+      origin: { x: "center", y: "center" },
+  })
+  canvas.addChild(this.eyes);
+}
+
+Snek.prototype.rotateEyes = function (direction) {
+  "use strict"
+  var dir = (direction || direction === 0) ? direction : this.direction;
+  this.eyes.rotation = 30 + dir * 60;
+  canvas.redraw();
 }
 
 Snek.prototype.addToBody = function (g, id, ignore_restrictions) {
-  /* If ignore_restrictions is true, the function will always add, ignoring any restrictions */
+  /* Adds a tile to the snake body if possible.
+    If ignore_restrictions is true, it will always add ignoring any restrictions.
+   */
   "use strict"
   var wont_ignore_restrictions = (ignore_restrictions) ? false : true;
   if (wont_ignore_restrictions) {
@@ -30,14 +56,15 @@ Snek.prototype.addToBody = function (g, id, ignore_restrictions) {
   }
   // the new hex becomes the head
   if (this.body.length > 0) {
-    g.grid[this.body[0]].hexagon.fill = global.hex_types["snek_body"]["main_color"]
+    changeHexType(g, this.body[0], "snek_body");
   }
   this.body.unshift(id);
-  g.grid[this.body[0]].hexagon.fill = global.hex_types["snek_head"]["main_color"]
+  changeHexType(g, this.body[0], "snek_head");
   return true;
 }
 
 Snek.prototype.move = function(g) {
+  // moves the entire snek 1 tile in the this.direction
   "use strict"
   var next_hex_id,
       iterator,
@@ -58,9 +85,19 @@ Snek.prototype.move = function(g) {
       aux_int = this.body[iterator];
       this.body[iterator] = next_hex_id;
       next_hex_id = aux_int;
-      g.grid[this.body[iterator]].hexagon.fill = global.hex_types["snek_body"]["main_color"]
+      changeHexType(g, this.body[iterator], "snek_body");
     }
-    g.grid[this.body[0]].hexagon.fill = global.hex_types["snek_head"]["main_color"]
-    g.grid[next_hex_id].hexagon.fill = global.hex_types["empty"]["main_color"]
+    changeHexType(g, this.body[0], "snek_head");
+    changeHexType(g, next_hex_id, "empty");
+    // update eyes
+    this.eyes.x = g.grid[this.body[0]].hexagon.x;
+    this.eyes.y = g.grid[this.body[0]].hexagon.y;
   }
+}
+
+Snek.prototype.setDirection = function (new_direction) {
+  /* Sets the new direction to the class and moves the snek`s eyes */
+  "use strict"
+  this.direction = new_direction
+  this.rotateEyes();
 }
