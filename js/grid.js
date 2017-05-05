@@ -74,7 +74,8 @@ Hex.prototype.getNeighbors = function (id) {
         position = -1,
         radius = this.getNumberOfRings(n),
         neighbors = [-1, -1, -1, -1, -1, -1],
-        is_diagonal = false;
+        is_diagonal = false,
+        aux_arr;
     if (n === 0) {
         neighbors = [1, 2, 3, 4, 5, 6];
         return neighbors;
@@ -83,29 +84,9 @@ Hex.prototype.getNeighbors = function (id) {
         neighbors = [0, 1, 5, 16, 17, 18];
         return neighbors;
     }
-    for (iterator = 0; iterator < 6; iterator += 1) {
-        if (this.getDiagonalElement(iterator, radius) === n) {
-            is_diagonal = true;
-            position = iterator;
-            break;
-        }
-    }
-    if (!is_diagonal) {
-        for (iterator = 0; iterator < 6; iterator += 1) {
-            if (iterator === 5) {
-                if (this.getDiagonalElement(iterator, radius) < n) {
-                    position = iterator;
-                    break;
-                }
-            }
-            // Will look for n in each region. The iterator corresponds
-            // to the id of the region (i = 0 -> NEr ..., i = 5 -> Nr).
-            if ((this.getDiagonalElement(iterator, radius) < n) && (n < this.getDiagonalElement(iterator + 1, radius))) {
-                position = iterator;
-                break;
-            }
-        }
-    }
+    aux_arr = this.getPositionAndDiagonal(n);
+    is_diagonal = aux_arr[1];
+    position = aux_arr[0];
     if (is_diagonal) {
         c1 = position;
         c2 = 7 - position; //(6 - position + 1)
@@ -150,35 +131,102 @@ Hex.prototype.getNeighbors = function (id) {
     return neighbors;
 };
 
+Hex.prototype.getOrderedNeighbors = function (id) {
+  "use strict"
+  /* Returns the neighbors list ordered by position*/
+  var aux_arr,
+      n, //neighbors
+      position,
+      diagonal;
+  if (id === 0) { return [1,2,3,4,5,6]; }
+  aux_arr = this.getPositionAndDiagonal(id);
+  diagonal = aux_arr[1];
+  position = aux_arr[0];
+  n = this.getNeighbors(id);
+  //(easier way: shifting, similar to the region distance - look at the diagonal)
+  //* caution needed at the breaking diagonal *
+  if (diagonal) {
+    switch (position) {
+      case 0:
+        return [n[4],n[5],n[2],n[0],n[1],n[3]]
+      case 1:
+        return [n[3],n[4],n[5],n[2],n[0],n[1]]
+      case 2:
+        return [n[1],n[3],n[4],n[5],n[2],n[0]]
+      case 3:
+        return [n[0],n[1],n[3],n[4],n[5],n[2]]
+      case 4:
+        return [n[2],n[0],n[1],n[3],n[4],n[5]]
+      case 5:
+        return [n[5],n[1],n[0],n[4],n[3],n[2]]
+    }
+  } else {
+      switch (position) {
+        case 0:
+          return [n[4],n[5],n[3],n[1],n[0],n[2]]
+        case 1:
+          return [n[2],n[4],n[5],n[3],n[1],n[0]]
+        case 2:
+          return [n[0],n[2],n[4],n[5],n[3],n[1]]
+        case 3:
+          return [n[1],n[0],n[2],n[4],n[5],n[3]]
+        case 4:
+          return [n[3],n[1],n[0],n[2],n[4],n[5]]
+        case 5:
+          return [n[5],n[3],n[1],n[0],n[2],n[4]]
+      }
+  }
+}
+
+Hex.prototype.getPositionAndDiagonal = function (id) {
+  "use strict"
+  var radius = this.getNumberOfRings(id),
+      iterator = 0,
+      position= -1,
+      diagonal = false;
+
+  for (iterator = 0; iterator < 6; iterator += 1) {
+      if (this.getDiagonalElement(iterator, radius) === id) {
+          diagonal = true;
+          position = iterator;
+          break;
+      }
+  }
+  if (!diagonal) {
+      for (iterator = 0; iterator < 6; iterator += 1) {
+          if (iterator === 5) {
+              if (this.getDiagonalElement(iterator, radius) < id) {
+                  position = iterator;
+                  break;
+              }
+          }
+          // Will look for n in each region. The iterator corresponds
+          // to the id of the region (i = 0 -> NEr ..., i = 5 -> Nr).
+          if ((this.getDiagonalElement(iterator, radius) < id) && (id < this.getDiagonalElement(iterator + 1, radius))) {
+              position = iterator;
+              break;
+          }
+      }
+  }
+  return [position, diagonal];
+}
+
 /* The following code is used for the creation of the grid, with its visual representation.
 *  The function MasterHex is used as the one that will create it's graphic representation.
 *  In this version we are using oCanvas (not ideal).
 */
 
-var canvas = oCanvas.create({
-    canvas: "#canvas"
-});
-
 function SimpleGrid() {
     "use strict";
     this.grid = [];
     this.selected_hex = 0;
-    this.hex_type = {"path": {"stdr.color" : "rgb(16,204,23)", "slct.color" : "rgb(255,80,45)", "hovr.color" : "rgb(109,255,156)",
-                             "trac.color" : "rgb(255,102,0)", "path.color" : "rgb(204,102,16)", "trgt.color" : "rgb(255,80,45)",
-                             "traversability": true, "weight" : 1},
-                     "mount": {"stdr.color" : "rgb(153, 102, 51)", "slct.color" : "rgb(255,80,45)", "hovr.color" : "rgb(109,255,156)",
-                            "trac.color" : "rgb(255,102,0)", "path.color" : "rgb(204,102,16)", "trgt.color" : "rgb(255,80,45)",
-                            "traversability": false, "weight" : 1},
-                     "river": {"stdr.color" : "rgb(51, 51, 204)", "slct.color" : "rgb(255,80,45)", "hovr.color" : "rgb(109,255,156)",
-                              "trac.color" : "rgb(255,102,0)", "path.color" : "rgb(204,102,16)", "trgt.color" : "rgb(255,80,45)",
-                              "traversability": true, "weight" : 3}};
 }
 
 function MasterHex(sg, id, x_pos, y_pos, radius, type) {
     /* This is the function that gives each hexagon it's physical form.
     *  'sd' is a reference for the SimpleGrid
     *  'id' is it's grid index.
-    *  'x_pos' and 'y_pos' it's coordinates on the canvas.
+    *  'x_pos' and 'y_pos' are it`s coordinates on the canvas.
     *  'radius' it's size
     *  'type' it's an identificator for it's type, wich may mean color,
     *   traversability and so on.
@@ -189,56 +237,35 @@ function MasterHex(sg, id, x_pos, y_pos, radius, type) {
         index = id;
     this.tp = type;
     this.grid_index = new Hex(id);
+    if (config.show_numbers) {
+      this.txt = canvas.display.text({
+          x: x_pos,
+          y: y_pos,
+          origin: { x: "center", y: "center" },
+          font: "bold" + (0.75 * radius).toString() + "px sans-serif",
+          text: index,
+          fill: "rgb(87, 85, 85)"
+      });
+    }
     this.hexagon = canvas.display.polygon({
         x: x_pos,
         y: y_pos,
         sides: 6,
         radius: radius,
-        fill: sg.hex_type[type]["stdr.color"], //standard_color
+        fill: global.hex_types[type]["main_color"], //standard_color
         rotation: 90
     }).bind("mouseenter touchenter", function () {
-        if (sg.hex_type[sg.grid[index].tp]["traversability"]) {
-            current_selection = sg.aStar(sg.selected_hex, index);
-            console.log(current_selection);
-            this.radius = radius * 1.07;
-            this.fill = sg.hex_type[sg.grid[index].tp]["hovr.color"]; //hover_color;
-            for (kterator = 0; kterator < current_selection.length; kterator += 1) {
-                try {
-                    sg.grid[current_selection[kterator]].hexagon.fill = sg.hex_type[sg.grid[current_selection[kterator]].tp]["trac.color"]; //trace_color
-                } catch (ignore) {
-                }
-            }
-        }
-        canvas.redraw();
-    }).bind("click trap", function () {
-        sg.grid[sg.selected_hex].hexagon.fill = sg.hex_type[sg.grid[sg.selected_hex].tp]["stdr.color"];
-        sg.selected_hex = index;
-        this.fill = sg.hex_type[sg.grid[index].tp]["slct.color"];
-        canvas.redraw();
-    }).bind("mouseleave touchleave", function () {
-        this.radius = radius;
-        if (index !== sg.selected_hex) {
-            this.fill = sg.hex_type[sg.grid[index].tp]["stdr.color"];
-        }
-        for (kterator = 0; kterator < current_selection.length; kterator += 1) {
-            try {
-                if (sg.grid[current_selection[kterator]].grid_index.getIndex() !== sg.selected_hex) {
-                    sg.grid[current_selection[kterator]].hexagon.fill = sg.hex_type[sg.grid[current_selection[kterator]].tp]["stdr.color"]; //standard_color
-                }
-            } catch (ignore) {
-            }
-        }
-        canvas.redraw();
-    }).bind("dblclick", function () {
-        if (sg.grid[index].tp === "path") {
-            sg.grid[index].tp = "mount";
-        } else if (sg.grid[index].tp === "mount") {
-            sg.grid[index].tp = "river";
-        } else if (sg.grid[index].tp === "river") {
-            sg.grid[index].tp = "path";
-        }
+        var txt = "Entered: "+index
+        var aux_arr = sg.grid[index].grid_index.getPositionAndDiagonal(index);
+        txt += " | P: " + aux_arr[0];
+        if (aux_arr[1]) { txt += "*";}
+        txt += " | neighbor of  " + sg.grid[index].grid_index.getOrderedNeighbors(index)
+        console.log(txt);
     });
     canvas.addChild(this.hexagon);
+    if (config.show_numbers) {
+      canvas.addChild(this.txt);
+    }
 }
 
 SimpleGrid.prototype.changeType = function (arr, type) {
@@ -264,25 +291,24 @@ SimpleGrid.prototype.createGrid = function (number_elements, spacing, element_si
         current_position = [canvas.width / 2, canvas.height / 2];
     //Each hex (MasterHex) position is the result of incrementing the previous position
     //based on the region of the current hex.
-    this.grid[0] = new MasterHex(this, 0, current_position[0], current_position[1], element_size, "path");
-    this.grid[0].fill = this.hex_type["slct.color"];
+    this.grid[0] = new MasterHex(this, 0, current_position[0], current_position[1], element_size, "empty");
     current_position[0] += x_dist * 0.5;
     current_position[1] -= y_dist;
-    this.grid[1] = new MasterHex(this, 1, current_position[0], current_position[1], element_size, "path");
+    this.grid[1] = new MasterHex(this, 1, current_position[0], current_position[1], element_size, "empty");
     current_position[0] += x_dist * 0.5;
     current_position[1] += y_dist;
-    this.grid[2] = new MasterHex(this, 2, current_position[0], current_position[1], element_size, "path");
+    this.grid[2] = new MasterHex(this, 2, current_position[0], current_position[1], element_size, "empty");
     current_position[0] -= x_dist * 0.5;
     current_position[1] += y_dist;
-    this.grid[3] = new MasterHex(this, 3, current_position[0], current_position[1], element_size, "path");
+    this.grid[3] = new MasterHex(this, 3, current_position[0], current_position[1], element_size, "empty");
     current_position[0] -= x_dist;
-    this.grid[4] = new MasterHex(this, 4, current_position[0], current_position[1], element_size, "path");
+    this.grid[4] = new MasterHex(this, 4, current_position[0], current_position[1], element_size, "empty");
     current_position[0] -= x_dist * 0.5;
     current_position[1] -= y_dist;
-    this.grid[5] = new MasterHex(this, 5, current_position[0], current_position[1], element_size, "path");
+    this.grid[5] = new MasterHex(this, 5, current_position[0], current_position[1], element_size, "empty");
     current_position[0] += x_dist * 0.5;
     current_position[1] -= y_dist;
-    this.grid[6] = new MasterHex(this, 6, current_position[0], current_position[1], element_size, "path");
+    this.grid[6] = new MasterHex(this, 6, current_position[0], current_position[1], element_size, "empty");
     //First ring must be initialized
     for (iterator = 7; iterator < size; iterator += 1) {
         is_diagonal = false;
@@ -334,7 +360,7 @@ SimpleGrid.prototype.createGrid = function (number_elements, spacing, element_si
             current_position[0] += x_dist * 0.5;
             current_position[1] -= y_dist;
         }
-        this.grid[iterator] = new MasterHex(this, iterator, current_position[0], current_position[1], element_size, "path");
+        this.grid[iterator] = new MasterHex(this, iterator, current_position[0], current_position[1], element_size, "empty");
     }
     canvas.redraw();
 };

@@ -1,3 +1,12 @@
+/*
+Colors:
+snek:
+drop:
+background: rgb(35, 34, 38);
+empty:  rgb(66, 66, 66);
+text: rgb(87, 85, 85);
+ */
+
 body {
     background-color: #232226;
 }
@@ -29,5 +38,4 @@ p {
 }
 
 #canvas {
-  padding-top: 30px;
 }
