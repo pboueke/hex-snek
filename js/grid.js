@@ -179,7 +179,7 @@ Hex.prototype.getOrderedNeighbors = function (id) {
 }
 
 Hex.prototype.getPositionAndDiagonal = function (id) {
-  "use strict"
+  "use strict";
   var radius = this.getNumberOfRings(id),
       iterator = 0,
       position= -1,
@@ -683,7 +683,7 @@ SimpleGrid.prototype.aStar = function (start, goal) {
 };
 
 function changeHexType(g, id, new_type) {
-  "use strict"
+  "use strict";
   g.grid[id].tp = new_type;
-  g.grid[id].hexagon.fill = global.hex_types[new_type]["main_color"]
+  g.grid[id].hexagon.fill = global.hex_types[new_type]["main_color"];
 }

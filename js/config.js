@@ -9,6 +9,7 @@ var config = {
   grid_size: 271,
   starting_snek_size: 5,
   starting_snek_head: 0,
+  snek_neck_bend: 2,
   clock: 100,
 }
 
@@ -38,6 +39,9 @@ var global = {
   snek_eyes_size_multiplier: 2,
 }
 
-var state = {
-  stop: false,
+var clamp = function (value, max, min) {
+  "use strict";
+  if (value > max) { return max; }
+  if (value < min){ return min; }
+  return value;
 }

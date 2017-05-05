@@ -8,17 +8,19 @@ function checkKey(e) {
 
     if (e.keyCode == '39') {
        // right arrow
+       s.clock_direction_delta = clamp(s.clock_direction_delta, config.snek_neck_bend, -config.snek_neck_bend) + 1;
        if (s.direction === 5) {return s.setDirection(0);}
        return s.setDirection(s.direction + 1);
     }
     else if (e.keyCode == '37') {
        // left arrow
+       s.clock_direction_delta = clamp(s.clock_direction_delta, config.snek_neck_bend, -config.snek_neck_bend) - 1;
        if (s.direction === 0) {return s.setDirection(5);}
        return s.setDirection(s.direction - 1);
     }
     else if (e.keyCode == '32') {
-      state.stop = !state.stop;
-      if (!state.stop) {
+      s.stop = !s.stop;
+      if (!s.stop) {
         Run();
       }
     }

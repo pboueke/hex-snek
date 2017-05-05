@@ -3,6 +3,8 @@ function Snek() {
   this.body = [];
   this.direction = 1;
   this.eyes;
+  this.clock_direction_delta = 0;
+  this.stop = false;
 }
 
 Snek.prototype.createEyes = function(g) {
@@ -69,9 +71,9 @@ Snek.prototype.move = function(g) {
   var next_hex_id,
       iterator,
       aux_int;
+  this.clock_direction_delta = 0;
   // get the hex for the next clock cycle
   next_hex_id = g.grid[this.body[0]].grid_index.getOrderedNeighbors(this.body[0])[this.direction];
-  console.log(next_hex_id)
   // you die! (not a traversable tile)
   if (next_hex_id > g.grid.length - 1 || !global.hex_types[g.grid[next_hex_id].tp]["traversable"]) {
     console.log("snek dead");
@@ -99,6 +101,9 @@ Snek.prototype.move = function(g) {
 Snek.prototype.setDirection = function (new_direction) {
   /* Sets the new direction to the class and moves the snek`s eyes */
   "use strict";
+  if (Math.abs(this.clock_direction_delta) > config.snek_neck_bend) {
+    return;
+  }
   this.direction = new_direction;
   this.rotateEyes();
 };
