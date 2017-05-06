@@ -39,9 +39,16 @@ var global = {
   snek_eyes_size_multiplier: 2,
 }
 
+// UTILS
 var clamp = function (value, max, min) {
   "use strict";
   if (value > max) { return max; }
   if (value < min){ return min; }
   return value;
+}
+
+var getRandomInt = function(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
 }

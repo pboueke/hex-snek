@@ -5,13 +5,13 @@ function Snek() {
   this.eyes;
   this.clock_direction_delta = 0;
   this.stop = false;
-}
+};
 
 Snek.prototype.createEyes = function(g) {
   "use strict";
   if (this.body.length < 1) {
     throw "Sssnek must have size to have eyesss!";
-  }
+  };
   var head = g.grid[this.body[0]];
   this.eyes = canvas.display.image({
       x: head.hexagon.x + global.snek_eyes_x_pos_diff,
@@ -41,27 +41,28 @@ Snek.prototype.addToBody = function (g, id, ignore_restrictions) {
     // returns false if the id is greater tha the grid size
     if (id > g.grid.length - 1) {
       return false;
-    }
+    };
     // returns false if id is not "traversable"
     if (!global.hex_types[g.grid[id].tp]["traversable"]) {
       return false;
-    }
+    };
     // returns false if id already in body
     if (this.body.indexOf(id) > -1) {
       return false;
-    }
+    };
     // returns false if id not in neighborhood of head
     if (this.body.length > 0 &&
         g.grid[id].grid_index.getNeighbors(this.body[0]).indexOf(id) < 0) {
           return false;
-    }
-  }
+    };
+  };
   // the new hex becomes the head
   if (this.body.length > 0) {
     changeHexType(g, this.body[0], "snek_body");
   }
   this.body.unshift(id);
   changeHexType(g, this.body[0], "snek_head");
+  this.updateEyes(g);
   return true;
 };
 
@@ -81,6 +82,7 @@ Snek.prototype.move = function(g) {
   } // you eat! (increase snek size or add points)
   else if (global.hex_types[g.grid[next_hex_id].tp]["food_weight"] > 0) {
     this.addToBody(g, next_hex_id);
+    this.addDrop(g);
     // TODO: add points
   } // walk
   else {
@@ -89,13 +91,12 @@ Snek.prototype.move = function(g) {
       this.body[iterator] = next_hex_id;
       next_hex_id = aux_int;
       changeHexType(g, this.body[iterator], "snek_body");
-    }
+    };
     changeHexType(g, this.body[0], "snek_head");
     changeHexType(g, next_hex_id, "empty");
     // update eyes
-    this.eyes.x = g.grid[this.body[0]].hexagon.x;
-    this.eyes.y = g.grid[this.body[0]].hexagon.y;
-  }
+    this.updateEyes(g);
+  };
 };
 
 Snek.prototype.setDirection = function (new_direction) {
@@ -106,4 +107,23 @@ Snek.prototype.setDirection = function (new_direction) {
   }
   this.direction = new_direction;
   this.rotateEyes();
+};
+
+Snek.prototype.updateEyes = function (g) {
+  "use strict";
+  if (this.body.length < 1 || !this.eyes) { return; }
+  this.eyes.x = g.grid[this.body[0]].hexagon.x;
+  this.eyes.y = g.grid[this.body[0]].hexagon.y;
+};
+
+Snek.prototype.addDrop = function (g) {
+  "use strict";
+  var new_pos = this.body[0];
+  while (this.body.indexOf(new_pos) !== -1) {
+    new_pos = getRandomInt(0,g.grid.length-1);
+  };
+  changeHexType(g,new_pos,"drop");
+  if (this.body.length === g.grid.length) {
+    // TODO: end game!
+  };
 };

@@ -9,7 +9,8 @@ var StartGame = function (snek_head, snek_size) {
     s.addToBody(g, snek_head, true)
   }
   s.createEyes(g);
-  s.setDirection(Math.floor(Math.random()));
+  s.setDirection(getRandomInt(0,5));
+  s.addDrop(g);
   canvas.redraw();
 
   Run();

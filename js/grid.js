@@ -139,6 +139,7 @@ Hex.prototype.getOrderedNeighbors = function (id) {
       position,
       diagonal;
   if (id === 0) { return [1,2,3,4,5,6]; }
+  if (id === 6) { return [18,1,0,5,16,17]; }
   aux_arr = this.getPositionAndDiagonal(id);
   diagonal = aux_arr[1];
   position = aux_arr[0];
