@@ -4,7 +4,7 @@ function Snek() {
   this.direction = 1;
   this.eyes;
   this.clock_direction_delta = 0;
-  this.stop = false;
+  this.alive = true;
 };
 
 Snek.prototype.createEyes = function(g) {
@@ -78,12 +78,13 @@ Snek.prototype.move = function(g) {
   // you die! (not a traversable tile)
   if (next_hex_id > g.grid.length - 1 || !global.hex_types[g.grid[next_hex_id].tp]["traversable"]) {
     console.log("snek dead");
-    // TODO: death
+    this.alive = false;
+    return 0;
   } // you eat! (increase snek size or add points)
   else if (global.hex_types[g.grid[next_hex_id].tp]["food_weight"] > 0) {
     this.addToBody(g, next_hex_id);
     this.addDrop(g);
-    // TODO: add points
+    return parseInt(config.drop_score * Math.sqrt(this.body.length));
   } // walk
   else {
     for (iterator = 0; iterator < this.body.length; iterator++) {
@@ -96,6 +97,7 @@ Snek.prototype.move = function(g) {
     changeHexType(g, next_hex_id, "empty");
     // update eyes
     this.updateEyes(g);
+    return config.walk_score;
   };
 };
 

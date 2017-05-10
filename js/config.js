@@ -2,6 +2,11 @@ var canvas = oCanvas.create({
     canvas: "#canvas"
 });
 
+var state = {
+  score: 0,
+  stop: false,
+}
+
 var config = {
   show_numbers: false,
   hex_size: 20,
@@ -10,6 +15,8 @@ var config = {
   starting_snek_size: 5,
   starting_snek_head: 0,
   snek_neck_bend: 2,
+  drop_score: 50,
+  walk_score: 1,
   clock: 100,
 }
 
