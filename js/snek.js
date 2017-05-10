@@ -78,7 +78,7 @@ Snek.prototype.move = function(g) {
   // you die! (not a traversable tile)
   if (next_hex_id > g.grid.length - 1 || !global.hex_types[g.grid[next_hex_id].tp]["traversable"]) {
     console.log("snek dead");
-    this.alive = false;
+    this.Kill();
     return 0;
   } // you eat! (increase snek size or add points)
   else if (global.hex_types[g.grid[next_hex_id].tp]["food_weight"] > 0) {
@@ -128,4 +128,23 @@ Snek.prototype.addDrop = function (g) {
   if (this.body.length === g.grid.length) {
     // TODO: end game!
   };
+};
+
+Snek.prototype.Kill = function() {
+  "use strict";
+  state.stop = true;
+  this.alive = false;
+  var head = g.grid[this.body[0]];
+  var dead_eyes = canvas.display.image({
+      x: this.eyes.x,
+      y: this.eyes.y,
+      image: "img/dead_snek_eyes.png",
+      width: this.eyes.width,
+      height: this.eyes.height,
+      origin: { x: "center", y: "center" },
+      rotation: this.eyes.rotation,
+  });
+  canvas.removeChild(this.eyes);
+  this.eyes = dead_eyes;
+  canvas.addChild(this.eyes);
 };
