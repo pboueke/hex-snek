@@ -20,7 +20,7 @@ function Run() {
   if (state.stop) { return; }
   state.score += s.move(g);
   canvas.redraw();
-  console.log (state.score);
+  //console.log (state.score);
   setTimeout(Run, config.clock);
 }
 
