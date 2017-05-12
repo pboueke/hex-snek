@@ -683,8 +683,13 @@ SimpleGrid.prototype.aStar = function (start, goal) {
     return ans;
 };
 
-function changeHexType(g, id, new_type) {
+function changeHexType(g, id, new_type, color) {
   "use strict";
   g.grid[id].tp = new_type;
-  g.grid[id].hexagon.fill = global.hex_types[new_type]["main_color"];
+  if (color) {
+    g.grid[id].hexagon.fill =  "#"+color;
+  }
+  else if (global.hex_types[new_type]["main_color"]) {
+    g.grid[id].hexagon.fill = global.hex_types[new_type]["main_color"];
+  }
 }

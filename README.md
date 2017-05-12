@@ -4,7 +4,6 @@ A very simple hexagonal-based sneak game created to demonstrate the viability of
 
 ## TODO:
 
-* Change sneak body colors (make a gradient from head to tail)
 * Pause mechanic/btn with UI clue.
 * Game start with UI clues.
 * Game end.

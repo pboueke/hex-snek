@@ -19,6 +19,7 @@ var StartGame = function (snek_head, snek_size) {
 function Run() {
   if (state.stop) { return; }
   state.score += s.move(g);
+  s.updateColors();
   canvas.redraw();
   //console.log (state.score);
   setTimeout(Run, config.clock);

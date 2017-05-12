@@ -5,6 +5,9 @@ function Snek() {
   this.eyes;
   this.clock_direction_delta = 0;
   this.alive = true;
+  this.rainbow = new Rainbow();
+  this.rainbow.setSpectrum(global.snek_head_color, global.snek_tail_color);
+  this.rainbow.setNumberRange(0, config.starting_snek_size);
 };
 
 Snek.prototype.createEyes = function(g) {
@@ -65,6 +68,16 @@ Snek.prototype.addToBody = function (g, id, ignore_restrictions) {
   this.updateEyes(g);
   return true;
 };
+
+Snek.prototype.updateColors = function() {
+  "use strict";
+  var i;
+  this.rainbow.setNumberRange(0,this.body.length);
+  changeHexType(g, this.body[0], "snek_head", this.rainbow.colourAt(0));
+  for (i = 1; i < this.body.length; i++) {
+    changeHexType(g, this.body[i], "snek_body", this.rainbow.colourAt(i));
+  }
+}
 
 Snek.prototype.move = function(g) {
   // moves the entire snek 1 tile in the this.direction

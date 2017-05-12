@@ -21,6 +21,8 @@ var config = {
 }
 
 var global = {
+  snek_head_color: "#e47e00",
+  snek_tail_color: "#e4b600",
   hex_types: {
     "empty": {
       "main_color" : "rgb(66, 66, 66)",
@@ -28,12 +30,12 @@ var global = {
       "food_weight": 0,
     },
     "snek_body": {
-      "main_color" : "rgb(228, 182, 0)",
+      //"main_color" : "rgb(228, 182, 0)",
       "traversable": false,
       "food_weight": 0,
     },
     "snek_head": {
-      "main_color" : "rgb(228, 126, 0)",
+      //"main_color" : "rgb(228, 126, 0)",
       "traversable": false,
       "food_weight": 0,
     },
