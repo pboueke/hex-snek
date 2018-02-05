@@ -1,7 +1,8 @@
-/**
- * Expose `PriorityQueue`.
+/*!
+ * priorityqueuejs
+ * https://github.com/janogonzalez/priorityqueuejs
+ * Licensed under the MIT license
  */
-//module.exports = PriorityQueue;
 
 /**
  * Initializes a new empty `PriorityQueue` with the given `comparator(a, b)`
