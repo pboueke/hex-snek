@@ -21,12 +21,42 @@ function checkKey(e) {
        return s.setDirection(s.direction - 1);
     }
     else if (e.keyCode == '32') {
-      state.stop = !state.stop;
-      if (!state.stop) {
-        Run();
-      }
+      // space bar
+      changePlayState()
     }
 }
+
+// BTNS
+
+document.getElementById("play-btn").addEventListener("click", changePlayState);
+
+// UTILS
+
+function changePlayState() {
+  toggleBlur("canvas-wrapper");
+  if (state.stop) {
+    document.getElementById("play-btn").className = document.getElementById("play-btn").className.replace(" selected","")
+    setTimeout(()=>{
+      state.stop = !state.stop; 
+      document.getElementById("play-btn-img").src="img/pause.svg";
+      Run();
+    }, 300);
+  } else { 
+    state.stop = !state.stop;
+    document.getElementById("play-btn-img").src="img/play.svg";
+    document.getElementById("play-btn").className += " selected"; }
+};
+
+function toggleBlur(divId) {
+  if (document.getElementById(divId).className.includes("blur")) {
+    document.getElementById(divId).className = document.getElementById(divId).className.replace(" blur","");
+  } else {
+    document.getElementById(divId).className += " blur";
+  }
+}
+
+
+// DIALOGS
 
 function showAbout() {
   swal({
