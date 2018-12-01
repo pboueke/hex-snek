@@ -60,17 +60,13 @@ function toggleBlur(divId) {
 
 function showAbout() {
   swal({
-  title: '<i>HTML</i> <u>example</u>',
+  title: 'Hex-Snek',
   type: 'info',
   html:
-    'You can use <b>bold text</b>, ' +
-    '<a href="//github.com">links</a> ' +
-    'and other HTML tags',
-  showCloseButton: true,
-  showCancelButton: true,
-  confirmButtonText:
-    '<i class="fa fa-thumbs-up"></i> Great!',
-  cancelButtonText:
-    '<i class="fa fa-thumbs-down"></i>'
+  'Game developed by <a href="https://pboueke.github.io/b/">pboueke</a>.<br>' +
+  ' You can view the source <a href="https://github.com/pboueke/hex-snek">here</a>.<br> ' +
+  ' Cheers!',
+  confirmButtonText: 'Close!',
+  customClass: 'info-box'
 })
 }

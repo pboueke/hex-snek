@@ -113,3 +113,16 @@ p {
   margin-left: -37px;
   transform: scaleX(3) scaley(3);
 }
+
+.info-box {
+  background-color: #8d8d8d !important;
+  color: white !important;
+} .info-box > * >a {
+  color: #ffb201 !important;
+} .info-box > * {
+  color: white !important;
+} .info-box > div > button {
+  color: white !important;
+  background-color: #9de0f6 !important;
+  color: rgb(255, 115, 0) !important;
+}
