@@ -18,11 +18,16 @@ var StartGame = function (snek_head, snek_size) {
 
 function Run() {
   if (state.stop) { return; }
-  state.score += s.move(g);
+  UpdateScore(s.move(g))
   s.updateColors();
   canvas.redraw();
   //console.log (state.score);
   setTimeout(Run, config.clock);
 }
+
+function UpdateScore(increment) {
+  state.score += increment;
+  document.getElementById("score").innerHTML = state.score.toString().padStart(14, '0');;
+} 
 
 StartGame(config.starting_snek_head, config.starting_snek_size);

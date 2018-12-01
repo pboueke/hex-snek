@@ -95,3 +95,14 @@ function showAbout() {
   customClass: 'info-box'
 })
 }
+
+function showConfig() {
+  swal({
+    title: 'Settings',
+    type: 'question',
+    html:
+    'Ooops..! Sorry, nothing to see here just yet.<br>',
+    confirmButtonText: 'Close!',
+    customClass: 'info-box'
+  })
+}
