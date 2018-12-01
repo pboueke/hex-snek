@@ -8,17 +8,11 @@ function checkKey(e) {
 
     if (e.keyCode == '39') {
        // right arrow
-       if (state.stop) { return; }
-       s.clock_direction_delta = clamp(s.clock_direction_delta, config.snek_neck_bend, -config.snek_neck_bend) + 1;
-       if (s.direction === 5) {return s.setDirection(0);}
-       return s.setDirection(s.direction + 1);
+       GoRight();
     }
     else if (e.keyCode == '37') {
        // left arrow
-       if (state.stop) { return; }
-       s.clock_direction_delta = clamp(s.clock_direction_delta, config.snek_neck_bend, -config.snek_neck_bend) - 1;
-       if (s.direction === 0) {return s.setDirection(5);}
-       return s.setDirection(s.direction - 1);
+       GoLeft();
     }
     else if (e.keyCode == '32') {
       // space bar
@@ -37,9 +31,24 @@ function checkKey(e) {
 
 document.getElementById("play-btn").addEventListener("click", changePlayState);
 document.getElementById("reset-btn").addEventListener("click", RestartGame);
+document.getElementById("right-control").addEventListener("click", GoRight);
+document.getElementById("left-control").addEventListener("click", GoLeft);
 
 // UTILS
 
+function GoRight() {
+  if (state.stop) { return; }
+  s.clock_direction_delta = clamp(s.clock_direction_delta, config.snek_neck_bend, -config.snek_neck_bend) + 1;
+  if (s.direction === 5) {return s.setDirection(0);}
+  return s.setDirection(s.direction + 1);
+}
+
+function GoLeft() {
+  if (state.stop) { return; }
+  s.clock_direction_delta = clamp(s.clock_direction_delta, config.snek_neck_bend, -config.snek_neck_bend) - 1;
+  if (s.direction === 0) {return s.setDirection(5);}
+  return s.setDirection(s.direction - 1);
+}
 
 function RestartGame (){
   
