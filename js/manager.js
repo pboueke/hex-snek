@@ -18,7 +18,7 @@ var StartGame = function (snek_head, snek_size) {
 
 function Run() {
   if (state.stop) { return; }
-  UpdateScore(s.move(g))
+  UpdateScore(s.move(g) * s.body.length)
   s.updateColors();
   canvas.redraw();
   //console.log (state.score);
