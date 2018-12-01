@@ -22,15 +22,40 @@ function checkKey(e) {
     }
     else if (e.keyCode == '32') {
       // space bar
-      changePlayState()
+      if (s.alive)
+      {
+        changePlayState()
+      }
+    }
+    else if (e.keyCode == '82') {
+      // r
+      RestartGame();
     }
 }
 
 // BTNS
 
 document.getElementById("play-btn").addEventListener("click", changePlayState);
+document.getElementById("reset-btn").addEventListener("click", RestartGame);
 
 // UTILS
+
+
+function RestartGame (){
+  
+  if (document.getElementById("canvas-wrapper").className.includes("blur")) {
+    document.getElementById("canvas-wrapper").className = document.getElementById(divId).className.replace(" blur","");
+  }
+  document.getElementById("canvas-wrapper").className += " blur";
+  s = new Snek();
+  canvas.redraw();
+  state.score = 0;
+  state.stop = false;
+  setTimeout( () => { 
+    document.getElementById("canvas-wrapper").className = document.getElementById("canvas-wrapper").className.replace(" blur","")
+    StartGame(config.starting_snek_head, config.starting_snek_size);
+  }, 500);
+}
 
 function changePlayState() {
   toggleBlur("canvas-wrapper");
