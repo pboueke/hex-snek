@@ -7,13 +7,13 @@ Made with pure JS for the game logic and OCanvas for the canvas manipulation. Yo
 ## TODO:
 
 * [x] Pause mechanic/btn with UI clue.
-* [] Game start with UI clues.
+* [ ] Game start with UI clues.
 * [x] Game end.
 * [x] Reset btn with UI clues.
 * Score Board:
    * [x] UI display.
-   * [] Highscores.
+   * [ ] Highscores.
 * Settings Dialog:
-   * [] Dificulty (clock speed)
+   * [ ] Dificulty (clock speed)
  * [x] About dialog
-* [] Mobile suport.
+* [ ] Mobile suport.
